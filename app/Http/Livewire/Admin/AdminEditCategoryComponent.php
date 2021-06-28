@@ -27,13 +27,26 @@ class AdminEditCategoryComponent extends Component
         $this->slug = Str::slug($this->name);
     }
 
+    public function updated($fields)
+    {
+        $this->validateOnly($fields,[
+            'name' => 'required',
+            'slug' => 'required|unique:categories'
+        ]);
+    }
+
     public function updateCategory()
     {
+        $this->validate([
+            'name' => 'required',
+            'slug' => 'required|unique:categories'
+        ]);
+
         $category = Category::find($this->category_id);
         $category->name = $this->name;
         $category->slug = $this->slug;
         $category->save();
-        session()->flash('message','Kategori telah berhasil diubah!');
+        session()->flash('message','Category has been update successfully!');
     }
     
     public function render()
